@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                     pd.setMessage("Loading...");
                     pd.show();
 
+                    // using volley
                     StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
                         @Override
                         public void onResponse(String s) {
