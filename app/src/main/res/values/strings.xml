@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Gossips</string>
     <string name="log_in">Login</string>
+    <string name="register">Register</string>
 </resources>

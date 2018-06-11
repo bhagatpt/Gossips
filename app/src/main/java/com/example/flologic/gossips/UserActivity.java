@@ -42,7 +42,7 @@ public class UserActivity extends AppCompatActivity {
 
         usersList = (ListView)findViewById(R.id.usersList);
         noUsersText = (TextView)findViewById(R.id.noUsersText);
-
+        getSupportActionBar().setTitle("Users");
         pd = new ProgressDialog(UserActivity.this);
         pd.setMessage("Loading...");
         pd.show();

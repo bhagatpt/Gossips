@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -39,28 +40,31 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         layout = (LinearLayout) findViewById(R.id.layout1);
-        layout_2 = (RelativeLayout)findViewById(R.id.layout2);
-        sendButton = (ImageView)findViewById(R.id.sendButton);
-        messageArea = (EditText)findViewById(R.id.messageArea);
-        scrollView = (ScrollView)findViewById(R.id.scrollView);
+        layout_2 = (RelativeLayout) findViewById(R.id.layout2);
+        sendButton = (ImageView) findViewById(R.id.sendButton);
+        messageArea = (EditText) findViewById(R.id.messageArea);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
 
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://gossips-82e8e.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
         reference2 = new Firebase("https://gossips-82e8e.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username);
-
+        getSupportActionBar().setTitle(UserDetails.chatWith);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
 
-                if(!messageText.equals("")){
+                if (!messageText.equals("")) {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("message", messageText);
                     map.put("user", UserDetails.username);
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
                     messageArea.setText("");
+                }else{
+                    Toast.makeText(ChatActivity.this,"Please write some message",Toast.LENGTH_LONG).show();
                 }
+
             }
         });
 
@@ -71,11 +75,10 @@ public class ChatActivity extends AppCompatActivity {
                 String message = map.get("message").toString();
                 String userName = map.get("user").toString();
 
-                if(userName.equals(UserDetails.username)){
-                    addMessageBox("You:-\n" + message, 1);
-                }
-                else{
-                    addMessageBox(UserDetails.chatWith + ":-\n" + message, 2);
+                if (userName.equals(UserDetails.username)) {
+                    addMessageBox(message, 1);
+                } else {
+                    addMessageBox(message, 2);
                 }
             }
 
@@ -101,20 +104,22 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    public void addMessageBox(String message, int type){
+    public void addMessageBox(String message, int type) {
+        //TextView textView = (TextView)findViewById(R.id.message) ;
         TextView textView = new TextView(ChatActivity.this);
+        textView.setPadding(5,5,5,5);
         textView.setText(message);
 
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp2.weight = 1.0f;
 
-        if(type == 1) {
-            lp2.gravity = Gravity.LEFT;
-            textView.setBackgroundResource(R.drawable.bg_msg_from);
-        }
-        else{
+        if (type == 1) {
             lp2.gravity = Gravity.RIGHT;
             textView.setBackgroundResource(R.drawable.bg_msg_from);
+        } else {
+            lp2.gravity = Gravity.LEFT;
+            textView.setBackgroundResource(R.drawable.bg_msg_from);
+
         }
         textView.setLayoutParams(lp2);
         layout.addView(textView);
